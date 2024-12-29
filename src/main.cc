@@ -19,26 +19,12 @@
 #include <sstream>
 // #include <taskflow/taskflow.hpp>
 
-// using std::any;
-// using std::any_cast;
-// using std::string;
-
-// using std::map;
-// using std::set;
-// using std::vector;
-
-// using std::shared_ptr;
-// using std::unique_ptr;
-// using std::weak_ptr;
-
-// using std::logic_error;
-// using std::runtime_error;
-
-#define fn inline __attribute__((always_inline)) auto
+#define function inline __attribute__((always_inline)) auto
 #define var auto
+#define elif else if
 
 // print
-// #define echo(x) std::cout << x << std::endl // printing to console
+#define echo(x) std::cout << x << std::endl // printing to console
 
 // int main()
 // {
@@ -71,7 +57,7 @@ public:
 
 Console console;
 
-fn hi()
+function hi()
 {
     var errorCode = 404;
     var errorMessage = "Not Found";
