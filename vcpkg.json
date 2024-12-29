@@ -2,7 +2,6 @@
   "dependencies": [
     "fmt",
     "taskflow",
-    "spdlog",
     "mongo-cxx-driver"
   ]
 }
