@@ -38,7 +38,7 @@ target_include_directories(x_core PRIVATE include)
 
 ## fmt
 find_package(fmt CONFIG REQUIRED)
-target_link_libraries(x_core PRIVATE fmt::fmt)
+target_link_libraries(x_core PRIVATE fmt::fmt-header-only)
 
 ## taskflow
 find_package(Taskflow CONFIG REQUIRED)
