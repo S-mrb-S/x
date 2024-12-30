@@ -7,9 +7,9 @@ function hi() {
     console.error("Error {}: {}", errorCode, errorMessage);
 
     for (size_t i = 0; i < 30; i++) {
-        go << []() {
+        go << lm {
             // task
-            go << []() {
+            go << lm {
                 // task
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             };
@@ -18,17 +18,18 @@ function hi() {
 
     // go.waitAll();
 
-    $ result1 = async >> []() {
+    $ result1 = async >> lm {
         std::cout << "Task 1\n";
         return 1;
     };
 
-    $ result2 = async >> []() {
+    $ result2 = async >> lm {
         std::cout << "Task 2\n";
         return 2;
     };
 
-    async.await();
+    // async.await();
+    // await(async);
 
     std::cout << "Result 1: " << result1.get() << std::endl;
     std::cout << "Result 2: " << result2.get() << std::endl;
