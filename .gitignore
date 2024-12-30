@@ -16,3 +16,5 @@ bin/
 build/
 cmake_install.cmake
 vcpkg_installed/
+/cmake-build*
+.idea/
