@@ -1,8 +1,8 @@
 #include "core.hpp"
 
 function hi() {
-    var errorCode = 404;
-    var errorMessage = "Not Found";
+    $ errorCode = 404;
+    $ errorMessage = "Not Found";
 
     console.error("Error {}: {}", errorCode, errorMessage);
 
@@ -18,12 +18,12 @@ function hi() {
 
     // go.waitAll();
 
-    auto result1 = async << []() {
+    $ result1 = async << []() {
         std::cout << "Task 1\n";
         return 1;
     };
 
-    auto result2 = async << []() {
+    $ result2 = async << []() {
         std::cout << "Task 2\n";
         return 2;
     };
