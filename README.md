@@ -1,6 +1,6 @@
 # XCore
 ## Example
-```C++
+```Php
 #include "core.hpp"
 
 function hi() {
