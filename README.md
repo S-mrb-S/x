@@ -1,3 +1,42 @@
+# XCore
+## Example
+```C++
+#include "core.hpp"
+
+function hi() {
+    $ errorCode = 404;
+    $ errorMessage = "Not Found";
+
+    console.error("Error {}: {}", errorCode, errorMessage);
+
+    for (size_t i = 0; i < 30; i++) {
+        go << []() {
+            // task
+            go << []() {
+                // task
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            };
+        };
+    }
+
+    // go.waitAll();
+
+    $ result1 = async << []() {
+        std::cout << "Task 1\n";
+        return 1;
+    };
+
+    $ result2 = async << []() {
+        std::cout << "Task 2\n";
+        return 2;
+    };
+
+    async.waitAll();
+
+    echo("Result 1: " << result1.get());
+    echo("Result 2: " << result2.get());
+}
+```
 ### New Features
 
 We're excited to introduce some fantastic new features to enhance your coding experience! These include `function`, `echo`, `go`, `async`, `console.log`, `console.error`, and variable support with `$`. Each of these features has been carefully optimized and thoroughly tested to ensure they work seamlessly for you.
