@@ -55,12 +55,16 @@ target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::bsoncxx_static>
 find_package(mongocxx CONFIG REQUIRED)
 target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongocxx_static>,mongo::mongocxx_static,mongo::mongocxx_shared>)
 
+## Threads (POSIX)
+find_package(Threads REQUIRED)
+
+target_link_libraries(x_core PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 ############################################################
 ## Compiler options
 if (MSVC)
     target_compile_options(x_core PRIVATE /O2 /arch:AVX2)
 else ()
-    target_compile_options(x_core PRIVATE -O3 -march=native -flto)
+    target_compile_options(x_core PRIVATE -O2 -march=native -flto)
 endif ()
 
 ############################################################
