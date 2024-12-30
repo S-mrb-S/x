@@ -18,17 +18,17 @@ function hi() {
 
     // go.waitAll();
 
-    $ result1 = async << []() {
+    $ result1 = async >> []() {
         std::cout << "Task 1\n";
         return 1;
     };
 
-    $ result2 = async << []() {
+    $ result2 = async >> []() {
         std::cout << "Task 2\n";
         return 2;
     };
 
-    async.waitAll();
+    async.await();
 
     std::cout << "Result 1: " << result1.get() << std::endl;
     std::cout << "Result 2: " << result2.get() << std::endl;

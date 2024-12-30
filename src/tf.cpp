@@ -31,12 +31,12 @@ public:
     Async &operator=(const Async &) = delete;
 
     template<typename Func>
-    auto operator<<(Func &&func) {
+    auto operator>>(Func &&func) {
         auto future = this->executor.async(std::forward<Func>(func));
         return future;
     }
 
-    function waitAll() {
+    function await() {
         this->executor.wait_for_all();
     }
 
