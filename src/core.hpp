@@ -14,7 +14,6 @@
 #include <sstream>
 #include <taskflow/taskflow.hpp>
 #include <fmt/core.h>
-#include <fmt/ostream.h>
 #include <string_view>
 #include <optional>
 #include <format> // C++20
