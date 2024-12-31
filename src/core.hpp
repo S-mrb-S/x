@@ -16,7 +16,6 @@
 #include <fmt/core.h> // C++11 (depends on library version)
 #include <string_view> // C++17
 #include <optional> // C++17
-#include <format> // C++20
 
 // local modules
 #include "core.cpp"
