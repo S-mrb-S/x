@@ -4,35 +4,35 @@ function hi() {
     $ errorCode = 404;
     $ errorMessage = "Not Found";
 
-    console.error("Error {}: {}", errorCode, errorMessage);
+    console.log("Error {}: {}", errorCode, errorMessage);
 
     for (size_t i = 0; i < 30; i++) {
         go << lm {
             // task
-            go << lm {
-                // task
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-            };
+            // go << lm {
+            //     // task
+            //     // std::this_thread::sleep_for(std::chrono::seconds(1));
+            // };
         };
     }
 
     go.waitAll();
 
     $ result1 = async >> lm {
-        std::cout << "Task 1\n";
+        console.log("Task 1");
         return 1;
     };
 
     $ result2 = async >> lm {
-        std::cout << "Task 2\n";
+        console.log("Task 2");
         return 2;
     };
 
     result2.wait();
     // await(async);
 
-    std::cout << "Result 1: " << result1.get() << std::endl;
-    std::cout << "Result 2: " << result2.get() << std::endl;
+    console.log("Result 1: {}", result1.get());
+    console.log("Result 2: {}", result2.get());
 }
 
 int main() {
