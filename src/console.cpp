@@ -2,13 +2,18 @@
 class Console {
 public:
     template<typename... Args>
-    $ log(const std::string &format, Args &&... args) {
-        fmt::print("{}\n", fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+    void out(std::ostream& out, const std::string_view format, Args&&... args) {
+        fmt::print(out, "{}\n", fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
     }
 
     template<typename... Args>
-    $ error(const std::string &format, Args &&... args) {
-        fmt::print(stderr, "{}\n", fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+    void error(std::string_view format, Args&&... args) {
+        out(std::cerr, format, std::forward<Args>(args)...);
+    }
+
+    template<typename... Args>
+    void log(std::string_view format, Args&&... args) {
+        out(std::cout, format, std::forward<Args>(args)...);
     }
 };
 
