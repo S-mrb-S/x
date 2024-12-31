@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 
+# Set default compilers if not specified
+if(NOT DEFINED CMAKE_C_COMPILER)
+    set(CMAKE_C_COMPILER "gcc")
+endif()
+
+if(NOT DEFINED CMAKE_CXX_COMPILER)
+    set(CMAKE_CXX_COMPILER "g++")
+endif()
+
 project(x_core LANGUAGES CXX C)
 
 ############################################################
@@ -57,14 +66,20 @@ target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongocxx_static
 
 ## Threads (POSIX)
 find_package(Threads REQUIRED)
-
 target_link_libraries(x_core PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+
 ############################################################
-## Compiler options
-if (MSVC)
-    target_compile_options(x_core PRIVATE /O2 /arch:AVX2)
-else ()
-    target_compile_options(x_core PRIVATE -O2 -march=native -flto)
+## Compiler options for GCC
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(x_core PRIVATE
+            -O3                     # Maximum optimization
+            -march=native           # Optimize for the current architecture
+            -mtune=native           # Tune for the current architecture
+            -flto                   # Enable Link Time Optimization
+#            -fomit-frame-pointer     # Omit frame pointer for optimization
+#            -fno-exceptions         # Disable exceptions if not needed
+#            -fno-rtti               # Disable RTTI if not needed
+    )
 endif ()
 
 ############################################################
