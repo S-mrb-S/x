@@ -1,19 +1,44 @@
 // console class for log and save
+
+/**
+ * Run time format in fmt
+ * @tparam Args
+ * @param content
+ * @param args
+ * @return
+ */
+template<typename... Args>
+function rformat(const std::string_view content, Args &&... args) {
+    return fmt::format(fmt::runtime(content), std::forward<Args>(args)...);
+}
+
+/**
+ * Console class
+ */
 class Console {
 public:
+    /**
+     * Error log in fmt (unbuffered)
+     * @tparam Args
+     * @param format
+     * @param args
+     * @return
+     */
     template<typename... Args>
-    void out(std::ostream& out, const std::string_view format, Args&&... args) {
-        fmt::print(out, "{}\n", fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+    function error(const std::string_view format, Args &&... args) const -> $ {
+        fmt::print(std::cerr, "{}\n", rformat(format, std::forward<Args>(args)...));
     }
 
+    /**
+     * normal log in fmt
+     * @tparam Args
+     * @param format
+     * @param args
+     * @return
+     */
     template<typename... Args>
-    void error(std::string_view format, Args&&... args) {
-        out(std::cerr, format, std::forward<Args>(args)...);
-    }
-
-    template<typename... Args>
-    void log(std::string_view format, Args&&... args) {
-        out(std::cout, format, std::forward<Args>(args)...);
+    function log(const std::string_view format, Args &&... args) const -> $ {
+        fmt::print("{}\n", rformat(format, std::forward<Args>(args)...));
     }
 };
 
