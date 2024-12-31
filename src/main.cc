@@ -16,7 +16,7 @@ function hi() {
         };
     }
 
-    // go.waitAll();
+    go.waitAll();
 
     $ result1 = async >> lm {
         std::cout << "Task 1\n";
@@ -28,7 +28,7 @@ function hi() {
         return 2;
     };
 
-    // async.await();
+    result2.wait();
     // await(async);
 
     std::cout << "Result 1: " << result1.get() << std::endl;

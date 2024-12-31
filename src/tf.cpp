@@ -1,48 +1,45 @@
-// taskflow threads managers
-
-// Go (silent async)
-class Go {
+// Base class for task execution
+template<typename ExecutorType>
+class TaskExecutor {
 public:
-    Go() : executor(100) {}
+    explicit TaskExecutor(size_t thread_count) : executor(thread_count) {}
 
-    Go(const Go &) = delete;
-    Go &operator=(const Go &) = delete;
+    TaskExecutor(const TaskExecutor &) = delete;
+    $ &operator=(const TaskExecutor &) = delete;
 
+protected:
+    ExecutorType executor;
+};
+
+// Silent async execution
+class Go : public TaskExecutor<tf::Executor> {
+public:
+    Go() : TaskExecutor(100) {}
+
+    // Shift left operator for silent async
     template<typename Func>
-    Go &operator<<(Func &&func) {
-        this->executor.silent_async(std::forward<Func>(func));
+    $ &operator<<(Func &&func) {
+        executor.silent_async(std::forward<Func>(func));
         return *this;
     }
 
-    function waitAll() {
-        this->executor.wait_for_all();
+    $ waitAll() {
+        executor.wait_for_all();
     }
-
-private:
-    tf::Executor executor;
 };
 
-// Async (future)
-class Async {
+// Async execution with future
+class Async : public TaskExecutor<tf::Executor> {
 public:
-    Async() : executor(100) {}
+    Async() : TaskExecutor(100) {}
 
-    Async(const Async &) = delete;
-    Async &operator=(const Async &) = delete;
-
+    // Shift right operator for async
     template<typename Func>
-    auto operator>>(Func &&func) {
-        auto future = this->executor.async(std::forward<Func>(func));
-        return future;
+    $ operator>>(Func &&func) {
+        return executor.async(std::forward<Func>(func));
     }
-
-    function await() {
-        this->executor.wait_for_all();
-    }
-
-private:
-    tf::Executor executor;
 };
 
+// Global instances
 Async async;
 Go go;
