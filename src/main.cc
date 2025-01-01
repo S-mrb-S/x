@@ -29,7 +29,6 @@ function hi() {
     };
 
     result2.wait();
-    // await(async);
 
     console.log("Result 1: {}", result1.get());
     console.log("Result 2: {}", result2.get());

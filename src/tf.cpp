@@ -14,7 +14,7 @@ protected:
 // Silent async execution
 class Go : public TaskExecutor<tf::Executor> {
 public:
-    Go() : TaskExecutor(100) {}
+    Go() : TaskExecutor(200) {}
 
     // Shift left operator for silent async
     template<typename Func>
