@@ -36,12 +36,12 @@ message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 if (DEFINED ENV{VCPKG_ROOT})
     set(VCPKG_ROOT $ENV{VCPKG_ROOT})
     message(STATUS "Using VCPKG_ROOT from environment: ${VCPKG_ROOT}")
-else ()
-    message(FATAL_ERROR "VCPKG_ROOT is not defined in the environment.")
-endif ()
 
-# Include vcpkg build system
-include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+    # Include vcpkg build system
+    include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+else ()
+    message(WARNING "VCPKG_ROOT is not defined in the environment. Proceeding without VCPKG.")
+endif ()
 
 ############################################################
 ## Create the executable from src/main.cc
@@ -49,14 +49,14 @@ add_executable(x_core src/main.cc)
 
 ############################################################
 ## Find and link libraries
-find_package(fmt CONFIG REQUIRED)
+find_package(fmt CONFIG)
 target_link_libraries(x_core PUBLIC fmt::fmt-header-only)
 
-find_package(bsoncxx CONFIG REQUIRED)
-target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::bsoncxx_static>,mongo::bsoncxx_static,mongo::bsoncxx_shared>)
+#find_package(bsoncxx CONFIG REQUIRED)
+#target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::bsoncxx_static>,mongo::bsoncxx_static,mongo::bsoncxx_shared>)
 
-find_package(mongocxx CONFIG REQUIRED)
-target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongocxx_static>,mongo::mongocxx_static,mongo::mongocxx_shared>)
+#find_package(mongocxx CONFIG REQUIRED)
+#target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongocxx_static>,mongo::mongocxx_static,mongo::mongocxx_shared>)
 
 option(ENABLE_OPENMP "Enable OpenMP support" ON)
 find_package(OpenMP)
