@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 
+find_package(CURL REQUIRED)
+find_package(jsoncpp REQUIRED)
+
 # Set default compilers if not specified
 if(NOT DEFINED CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_COMPILER "clang++")
@@ -73,6 +76,8 @@ if(OpenMP_CXX_FOUND)
 else()
     message(WARNING "OpenMP library not found.")
 endif()
+
+target_link_libraries(x_core PUBLIC CURL::libcurl jsoncpp_lib)
 
 ############################################################
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

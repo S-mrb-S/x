@@ -21,6 +21,8 @@
 #include <omp.h>
 #endif
 
+#include <curl/curl.h>
+
 #include <string_view> // C++17
 #include <optional> // C++17
 #include <vector>
