@@ -12,8 +12,15 @@
 #include <chrono> // C++11
 #include <exception>
 #include <sstream>
-#include <omp.h> // OpenMp
-#include <fmt/core.h> // C++11 (depends on library version)
+
+#ifdef USE_FMT
+#include <fmt/core.h>
+#endif
+
+#ifdef USE_OPENMP
+#include <omp.h>
+#endif
+
 #include <string_view> // C++17
 #include <optional> // C++17
 #include <vector>
