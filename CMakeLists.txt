@@ -49,8 +49,13 @@ add_executable(x_core src/main.cc)
 
 ############################################################
 ## Find and link libraries
-find_package(fmt CONFIG)
-target_link_libraries(x_core PUBLIC fmt::fmt-header-only)
+find_package(fmt CONFIG QUIET)
+if(fmt_FOUND)
+    message(STATUS "fmt library added.")
+    target_link_libraries(x_core PUBLIC fmt::fmt-header-only)
+else()
+    message(WARNING "fmt library not found.")
+endif()
 
 #find_package(bsoncxx CONFIG REQUIRED)
 #target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::bsoncxx_static>,mongo::bsoncxx_static,mongo::bsoncxx_shared>)
@@ -59,16 +64,16 @@ target_link_libraries(x_core PUBLIC fmt::fmt-header-only)
 #target_link_libraries(x_core PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongocxx_static>,mongo::mongocxx_static,mongo::mongocxx_shared>)
 
 option(ENABLE_OPENMP "Enable OpenMP support" ON)
-find_package(OpenMP)
+find_package(OpenMP QUIET)
 
 if(ENABLE_OPENMP AND (OpenMP_C_FOUND OR OpenMP_CXX_FOUND))
-    message(STATUS "OpenMP found, enabling OpenMP support.")
+    message(STATUS "OpenMP library added.")
     add_definitions(-DENABLE_OPENMP)
 else()
     if(ENABLE_OPENMP)
-        message(WARNING "OpenMP not found. Disabling OpenMP support.")
+        message(WARNING "OpenMP library not found.")
     else()
-        message(STATUS "OpenMP support disabled by user.")
+        message(STATUS "OpenMP disabled.")
     endif()
 endif()
 
