@@ -52,6 +52,7 @@ add_executable(x_core src/main.cc)
 find_package(fmt CONFIG QUIET)
 if(fmt_FOUND)
     target_link_libraries(x_core PUBLIC fmt::fmt-header-only)
+    target_compile_definitions(x_core PUBLIC USE_FMT)
     message(STATUS "fmt library added.")
 else()
     message(WARNING "fmt library not found.")
@@ -67,13 +68,13 @@ find_package(OpenMP QUIET)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(x_core PUBLIC OpenMP::OpenMP_CXX)
     target_link_libraries(x_core PUBLIC OpenMP::OpenMP_C)
+    target_compile_definitions(x_core PUBLIC USE_OPENMP)
     message(STATUS "OpenMP library added.")
 else()
     message(WARNING "OpenMP library not found.")
 endif()
 
 ############################################################
-## Compiler options for GCC
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(x_core PRIVATE
             -O3                     # Maximum optimization
