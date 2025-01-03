@@ -12,6 +12,7 @@
 #include <chrono> // C++11
 #include <exception>
 #include <sstream>
+#include <format>
 
 #ifdef USE_FMT
 #include <fmt/core.h>
