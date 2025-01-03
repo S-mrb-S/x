@@ -1,33 +1,23 @@
 
-// Silent async execution
-class Go{
+class Go
+{
 public:
-    // Go() : TaskExecutor(200) {}
-
-    // Shift left operator for silent async
-    template<typename Func>
-    $ &operator<<(Func &&func) {
-        // executor.silent_async(std::forward<Func>(func));
+    template <typename Func>
+    Go &operator>>(Func &&func)
+    {
+#pragma omp parallel
+#pragma omp single
+        {
+#pragma omp task
+            func();
+        }
         return *this;
     }
 
-    $ waitAll() {
-        // executor.wait_for_all();
+    $ wait()
+    {
+#pragma omp taskwait
     }
 };
 
-// Async execution with future
-class Async{
-public:
-    // Async() : TaskExecutor(100) {}
-
-    // Shift right operator for async
-    template<typename Func>
-    $ operator>>(Func &&func) {
-        // return executor.async(std::forward<Func>(func));
-    }
-};
-
-// Global instances
-Async async;
 Go go;
