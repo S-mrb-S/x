@@ -1,8 +1,8 @@
 #!/bin/bash
 
-rm -rf build
-mkdir build
-cd build
+rm -rf cmake-build
+mkdir cmake-build
+cd cmake-build
 
 cmake -G Ninja ..
 cmake --build . -- -j4
