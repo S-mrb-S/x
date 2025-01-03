@@ -65,7 +65,7 @@ else()
 endif()
 
 find_package(jsoncpp CONFIG REQUIRED)
-target_link_libraries(x_core PRIVATE JsonCpp::JsonCpp)
+target_link_libraries(x_core PUBLIC JsonCpp::JsonCpp)
 
 # Compiler options for GNU and Clang
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
