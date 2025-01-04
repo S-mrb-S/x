@@ -13,6 +13,7 @@
 #include <exception>
 #include <sstream>
 #include <format>
+#include <mutex>
 
 #ifdef USE_FMT
 #include <fmt/core.h>
