@@ -5,18 +5,6 @@ function hi() {
     // $ errorMessage = "Not Found";
 
     // console.log("Error {}: {}", errorCode, errorMessage);
-
-    // for (size_t i = 0; i < 30; i++) {
-    //     go >> lm {
-    //         // task
-    //         go >> lm {
-    //             // task
-    //             std::this_thread::sleep_for(std::chrono::seconds(1));
-    //         };
-    //     };
-    // }
-
-    // go.wait();
     const int N = 10000000; // 10000000
     int sum = 0;
     std::mutex mu; // قفل برای دسترسی ایمن به sum
