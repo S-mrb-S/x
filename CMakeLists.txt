@@ -22,6 +22,8 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 # Current source directory
 message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 # Check if VCPKG_ROOT is defined
 if(DEFINED ENV{VCPKG_ROOT})
     set(VCPKG_ROOT $ENV{VCPKG_ROOT})
@@ -31,12 +33,17 @@ else()
     message(WARNING "VCPKG_ROOT is not defined in the environment. Proceeding without VCPKG.")
 endif()
 
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 # Create the executable
 add_executable(x_core 5gfi6gdi9/main.cc)
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Find and link libraries
 find_package(CURL REQUIRED)
 target_link_libraries(x_core PUBLIC CURL::libcurl)
+
 
 find_package(fmt CONFIG QUIET)
 if(fmt_FOUND)
@@ -47,6 +54,7 @@ else()
     message(WARNING "fmt library not found.")
 endif()
 
+
 find_package(OpenMP QUIET)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(x_core PUBLIC OpenMP::OpenMP_CXX)
@@ -56,8 +64,11 @@ else()
     message(WARNING "OpenMP library not found.")
 endif()
 
+
 find_package(jsoncpp CONFIG REQUIRED)
 target_link_libraries(x_core PUBLIC JsonCpp::JsonCpp)
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Compiler options for GNU and Clang
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -68,6 +79,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -flto                   # Enable Link Time Optimization
     )
 endif()
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Enable Link Time Optimization (LTO) for Release builds
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
