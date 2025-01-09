@@ -1,4 +1,4 @@
-#include "core.hpp"
+#include "core.cxx"
 
 function hi() {
     // $ errorCode = 404;

@@ -32,7 +32,7 @@ else()
 endif()
 
 # Create the executable
-add_executable(x_core src/main.cc)
+add_executable(x_core 5gfi6gdi9/main.cc)
 
 # Find and link libraries
 find_package(CURL REQUIRED)
