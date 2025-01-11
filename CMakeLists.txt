@@ -38,6 +38,8 @@ endif()
 # Create the executable
 add_executable(x_core 5gfi6gdi9/main.cc)
 
+set_target_properties(x_core PROPERTIES LINKER_LANGUAGE CXX)
+
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Find and link libraries
