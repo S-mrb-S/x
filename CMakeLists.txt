@@ -3,14 +3,11 @@ cmake_minimum_required(VERSION 3.20)
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 set(CORE_NAME xcore)
-set(CORE_DESCRIPTION XCore)
-
-set(CORE_CXX_VERSION 20)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Project definition
-project(${CORE_NAME} DESCRIPTION ${CORE_DESCRIPTION} LANGUAGES CXX)
+project(${CORE_NAME} DESCRIPTION Core LANGUAGES CXX)
 
 # Set default compilers if not specified
 if (NOT DEFINED CMAKE_CXX_COMPILER)
@@ -31,9 +28,11 @@ endif ()
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Set C++ standards
-set(CMAKE_CXX_STANDARD ${CORE_CXX_VERSION})
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Set the build type to Release if not specified
 if (NOT CMAKE_BUILD_TYPE)
@@ -96,13 +95,13 @@ endif ()
 # find_package(jsoncpp REQUIRED)
 # target_link_libraries(${CORE_NAME} PUBLIC jsoncpp_lib)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(JSONCPP jsoncpp)
+pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 link_libraries(${JSONCPP_LIBRARIES})
-# add_executable(myprogram myprogram.cpp)
+
 target_link_libraries(${CORE_NAME} PUBLIC ${JSONCPP_LIBRARIES})
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 # Compiler options for GNU and Clang
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${CORE_NAME} PRIVATE
