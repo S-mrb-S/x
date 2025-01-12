@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Project definition
-project(x_core LANGUAGES CXX)
+project(x_core DESCRIPTION Core LANGUAGES CXX)
 
 # Set default compilers if not specified
 if(NOT DEFINED CMAKE_CXX_COMPILER)
@@ -38,7 +38,12 @@ endif()
 # Create the executable
 add_executable(x_core 5gfi6gdi9/main.cc)
 
-set_target_properties(x_core PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(x_core PROPERTIES
+        OUTPUT_NAME "xcore"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../bin"
+        LINKER_LANGUAGE CXX
+        CXX_STANDARD 20
+)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
