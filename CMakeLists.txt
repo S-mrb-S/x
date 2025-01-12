@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+set(CORE_NAME xcore)
+set(CORE_DESCRIPTION XCore)
+
+set(CORE_CXX_VERSION 20)
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 # Project definition
-project(x_core DESCRIPTION Core LANGUAGES CXX)
+project(${CORE_NAME} DESCRIPTION ${CORE_DESCRIPTION} LANGUAGES CXX)
 
 # Set default compilers if not specified
 if (NOT DEFINED CMAKE_CXX_COMPILER)
@@ -19,15 +28,18 @@ if (NOT DEFINED CMAKE_CXX_COMPILER)
     endif ()
 endif ()
 
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 # Set C++ standards
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD ${CORE_CXX_VERSION})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # Set the build type to Release if not specified
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 endif ()
+
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 # Current source directory
@@ -47,26 +59,24 @@ endif ()
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Create the executable
-add_executable(x_core 5gfi6gdi9/main.cc)
+add_executable(${CORE_NAME} 5gfi6gdi9/main.cc)
 
-set_target_properties(x_core PROPERTIES
-        OUTPUT_NAME "xcore"
+set_target_properties(${CORE_NAME} PROPERTIES
+        OUTPUT_NAME ${CORE_NAME}
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/../bin"
-        LINKER_LANGUAGE CXX
-        CXX_STANDARD 20
 )
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Find and link libraries
 find_package(CURL REQUIRED)
-target_link_libraries(x_core PUBLIC CURL::libcurl)
+target_link_libraries(${CORE_NAME} PUBLIC CURL::libcurl)
 
 
 find_package(fmt CONFIG QUIET)
 if (fmt_FOUND)
-    target_link_libraries(x_core PUBLIC fmt::fmt-header-only)
-    target_compile_definitions(x_core PUBLIC USE_FMT)
+    target_link_libraries(${CORE_NAME} PUBLIC fmt::fmt-header-only)
+    target_compile_definitions(${CORE_NAME} PUBLIC USE_FMT)
     message(STATUS "fmt library added.")
 else ()
     message(WARNING "fmt library not found.")
@@ -75,8 +85,8 @@ endif ()
 
 find_package(OpenMP QUIET)
 if (OpenMP_CXX_FOUND)
-    target_link_libraries(x_core PUBLIC OpenMP::OpenMP_CXX)
-    target_compile_definitions(x_core PUBLIC USE_OPENMP)
+    target_link_libraries(${CORE_NAME} PUBLIC OpenMP::OpenMP_CXX)
+    target_compile_definitions(${CORE_NAME} PUBLIC USE_OPENMP)
     message(STATUS "OpenMP library added.")
 else ()
     message(WARNING "OpenMP library not found.")
@@ -84,18 +94,18 @@ endif ()
 
 
 # find_package(jsoncpp REQUIRED)
-# target_link_libraries(x_core PUBLIC jsoncpp_lib)
+# target_link_libraries(${CORE_NAME} PUBLIC jsoncpp_lib)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 link_libraries(${JSONCPP_LIBRARIES})
 # add_executable(myprogram myprogram.cpp)
-target_link_libraries(x_core PUBLIC ${JSONCPP_LIBRARIES})
+target_link_libraries(${CORE_NAME} PUBLIC ${JSONCPP_LIBRARIES})
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Compiler options for GNU and Clang
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(x_core PRIVATE
+    target_compile_options(${CORE_NAME} PRIVATE
             -O3                     # Maximum optimization
             -march=native           # Optimize for the current architecture
             -mtune=native           # Tune for the current architecture
