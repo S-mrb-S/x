@@ -47,6 +47,10 @@ else ()
     endif ()
 endif ()
 
+message(STATUS "< ============================== >")
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
+message(STATUS "< ============================== >")
+
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Set the build type to Release if not specified
