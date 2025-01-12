@@ -87,9 +87,11 @@ set_target_properties(${CORE_NAME} PROPERTIES
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 message(STATUS "< ============================== >")
 
+
 # Find and link libraries
 find_package(CURL REQUIRED)
 target_link_libraries(${CORE_NAME} PUBLIC CURL::libcurl)
+
 
 find_package(fmt CONFIG QUIET)
 if (fmt_FOUND)
@@ -111,8 +113,17 @@ else ()
 endif ()
 
 
-find_package(jsoncpp CONFIG REQUIRED)
-target_link_libraries(${CORE_NAME} PUBLIC JsonCpp::JsonCpp)
+find_package(PkgConfig QUIET)
+pkg_check_modules(JSONCPP QUIET jsoncpp)
+
+if (JSONCPP_FOUND)
+    link_libraries(${JSONCPP_LIBRARIES})
+    target_link_libraries(${CORE_NAME} PUBLIC ${JSONCPP_LIBRARIES})
+else()
+    find_package(jsoncpp CONFIG REQUIRED)
+    target_link_libraries(${CORE_NAME} PUBLIC JsonCpp::JsonCpp)
+endif()
+
 
 message(STATUS "< ============================== >")
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
