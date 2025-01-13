@@ -16,16 +16,16 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# Clang++ (llvm)
-find_program(CLANG_CPP_COMPILER NAMES clang++)
+# GNU
+find_program(GCC_CPP_COMPILER NAMES g++ c++)
 
-if (CLANG_CPP_COMPILER)
-    set(CMAKE_CXX_COMPILER ${CLANG_CPP_COMPILER})
+if (GCC_CPP_COMPILER)
+    set(CMAKE_CXX_COMPILER ${GCC_CPP_COMPILER})
 else ()
-    # G++
-    find_program(GCC_CPP_COMPILER NAMES g++)
-    if (GCC_CPP_COMPILER)
-        set(CMAKE_CXX_COMPILER ${GCC_CPP_COMPILER})
+    # clang++
+    find_program(CLANG_CPP_COMPILER NAMES clang++)
+    if (CLANG_CPP_COMPILER)
+        set(CMAKE_CXX_COMPILER ${CLANG_CPP_COMPILER})
     else ()
         # MSVC
         if (MSVC)
@@ -75,7 +75,20 @@ endif ()
 
 # Create the executable
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -flto -fno-exceptions -fno-rtti -ffast-math -funroll-loops -fomit-frame-pointer -DNDEBUG -static -s")
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+# Compiler options for GNU and Clang
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=x86-64-v4 -mtune=generic -flto -fno-exceptions -fno-rtti -ffast-math -funroll-loops -fomit-frame-pointer -DNDEBUG -fstrict-aliasing -fwhole-program -static -s")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto -fuse-linker-plugin -flto-compression-level=9 -Ofast -march=native -mtune=generic -fno-plt -foptimize-sibling-calls --param=max-gcse-memory=200000 -fno-exceptions -fno-rtti -funroll-loops -finline-functions -fomit-frame-pointer -DNDEBUG -fstrict-aliasing -static -s")
+
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    # TODO("CMAKE_CXX_FLAGS")
+    target_compile_options(${CORE_NAME} PRIVATE
+            /O2                     # Maximum optimization
+            /arch:NATIVE            # Optimize for the current architecture
+    )
+endif ()
 
 add_executable(${CORE_NAME} 5gfi6gdi9/main.cc)
 
@@ -93,7 +106,7 @@ message(STATUS "< ============================== >")
 find_package(CURL REQUIRED)
 if (CURL_FOUND)
     target_link_libraries(${CORE_NAME} PUBLIC ${CURL_STATIC_LIBRARIES})
-endif()
+endif ()
 
 
 find_package(fmt CONFIG QUIET)
@@ -120,12 +133,13 @@ find_package(PkgConfig QUIET)
 pkg_check_modules(JSONCPP QUIET jsoncpp)
 
 if (JSONCPP_FOUND)
-#    link_libraries(${JSONCPP_LIBRARIES})
+    #    link_libraries(${JSONCPP_LIBRARIES})
     target_link_libraries(${CORE_NAME} PUBLIC ${JSONCPP_LIBRARIES})
-else()
+else ()
+    # Vcpkg
     find_package(jsoncpp CONFIG REQUIRED)
     target_link_libraries(${CORE_NAME} PUBLIC JsonCpp::JsonCpp)
-endif()
+endif ()
 
 
 message(STATUS "< ============================== >")

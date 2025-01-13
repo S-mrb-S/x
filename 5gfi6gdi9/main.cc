@@ -4,7 +4,9 @@
 
 $ run() {
     // try {
-    //
+        // for (int i = 0; i < 100000; ++i) {
+        //
+        // }
     // } catch (const std::runtime_error &e) {
     //     std::cerr << "Runtime error: " << e.what() << std::endl;
     //     return 0;
