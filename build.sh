@@ -4,5 +4,5 @@ rm -rf cmake-build
 mkdir cmake-build
 cd cmake-build
 
-cmake -G Ninja ..
+cmake -DUSE_VCPKG=OFF -G Ninja ..
 cmake --build . -- -j4

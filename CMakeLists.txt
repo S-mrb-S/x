@@ -1,22 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR x86_64)
-
-set(CMAKE_CROSSCOMPILING 1)
-
-set(CMAKE_VERBOSE_MAKEFILE ON)
-
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 set(CORE_NAME xcore)
+project(${CORE_NAME} DESCRIPTION "The Core" LANGUAGES CXX)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# Project definition
-project(${CORE_NAME} DESCRIPTION "The Core" LANGUAGES CXX)
+option(USE_VCPKG "Use vcpkg for package management" ON)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -66,13 +55,18 @@ message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Check if VCPKG_ROOT is defined
-if (DEFINED ENV{VCPKG_ROOT})
-    set(VCPKG_ROOT $ENV{VCPKG_ROOT})
-    message(STATUS "Using VCPKG_ROOT from environment: ${VCPKG_ROOT}")
-    message(STATUS "< ============================== >")
-    include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+if (USE_VCPKG)
+    if (DEFINED ENV{VCPKG_ROOT})
+        set(VCPKG_ROOT $ENV{VCPKG_ROOT})
+        message(STATUS "Using VCPKG_ROOT from environment: ${VCPKG_ROOT}")
+        message(STATUS "< ============================== >")
+        include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+    else ()
+        message(WARNING "VCPKG_ROOT is not defined in the environment. Proceeding without VCPKG.")
+        message(STATUS "< ============================== >")
+    endif ()
 else ()
-    message(WARNING "VCPKG_ROOT is not defined in the environment. Proceeding without VCPKG.")
+    message(STATUS "vcpkg usage is disabled by user.")
     message(STATUS "< ============================== >")
 endif ()
 
@@ -80,6 +74,9 @@ endif ()
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Create the executable
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -flto -fno-exceptions -fno-rtti -ffast-math -funroll-loops -fomit-frame-pointer -DNDEBUG -static -s")
+
 add_executable(${CORE_NAME} 5gfi6gdi9/main.cc)
 
 set_target_properties(${CORE_NAME} PROPERTIES
@@ -88,13 +85,15 @@ set_target_properties(${CORE_NAME} PROPERTIES
 )
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# Find and link libraries
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 message(STATUS "< ============================== >")
 
-
-# Find and link libraries
+## static curl lib not supported in Vcpkg
 find_package(CURL REQUIRED)
-target_link_libraries(${CORE_NAME} PUBLIC CURL::libcurl)
+if (CURL_FOUND)
+    target_link_libraries(${CORE_NAME} PUBLIC ${CURL_STATIC_LIBRARIES})
+endif()
 
 
 find_package(fmt CONFIG QUIET)
@@ -121,7 +120,7 @@ find_package(PkgConfig QUIET)
 pkg_check_modules(JSONCPP QUIET jsoncpp)
 
 if (JSONCPP_FOUND)
-    link_libraries(${JSONCPP_LIBRARIES})
+#    link_libraries(${JSONCPP_LIBRARIES})
     target_link_libraries(${CORE_NAME} PUBLIC ${JSONCPP_LIBRARIES})
 else()
     find_package(jsoncpp CONFIG REQUIRED)
@@ -131,28 +130,6 @@ endif()
 
 message(STATUS "< ============================== >")
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG") # force debug msg and asserts
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto")
-
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-# Compiler options for GNU and Clang
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(${CORE_NAME} PRIVATE
-            -O3                     # Maximum optimization
-            -march=native           # Optimize for the current architecture
-            -mtune=native           # Tune for the current architecture
-    )
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(${CORE_NAME} PRIVATE
-            /O2                     # Maximum optimization
-            /arch:NATIVE            # Optimize for the current architecture
-    )
-endif ()
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 # Enable Link Time Optimization (LTO) for Release builds
