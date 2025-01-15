@@ -21,9 +21,9 @@
 #include <fmt/core.h>
 #endif
 
-#ifdef USE_OPENMP
-#include <omp.h>
-#endif
+// #ifdef USE_OPENMP
+//#include <omp.h>
+// #endif
 
 #include <curl/curl.h>
 

@@ -16,40 +16,22 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# GNU
-find_program(GCC_CPP_COMPILER NAMES g++ c++)
-
-if (GCC_CPP_COMPILER)
-    set(CMAKE_CXX_COMPILER ${GCC_CPP_COMPILER})
+find_program(CLANG_CPP_COMPILER NAMES clang++)
+if (CLANG_CPP_COMPILER)
+    set(CMAKE_CXX_COMPILER ${CLANG_CPP_COMPILER})
+    set(CMAKE_CXX_COMPILER_ID "Clang")
+    message(STATUS "Using Clang: ${CLANG_CPP_COMPILER}")
 else ()
-    # clang++
-    find_program(CLANG_CPP_COMPILER NAMES clang++)
-    if (CLANG_CPP_COMPILER)
-        set(CMAKE_CXX_COMPILER ${CLANG_CPP_COMPILER})
-    else ()
-        # MSVC
-        if (MSVC)
-            set(CMAKE_CXX_COMPILER "cl.exe")
-        else ()
-            message(FATAL_ERROR "No suitable C++ compiler found (Clang++, g++, or MSVC).")
-        endif ()
-    endif ()
+    message(FATAL_ERROR "No suitable Clang compiler found.")
 endif ()
-
-message(STATUS "< ============================== >")
-message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
-message(STATUS "< ============================== >")
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# Set the build type to Release if not specified
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE) # enable -O3 flag
 endif ()
 
 message(STATUS "< ============================== >")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
 message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -73,22 +55,8 @@ endif ()
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# Create the executable
-
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 # Compiler options for GNU and Clang
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=x86-64-v4 -mtune=generic -flto -fno-exceptions -fno-rtti -ffast-math -funroll-loops -fomit-frame-pointer -DNDEBUG -fstrict-aliasing -fwhole-program -static -s")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto -fuse-linker-plugin -flto-compression-level=9 -Ofast -march=native -mtune=generic -fno-plt -foptimize-sibling-calls --param=max-gcse-memory=200000 -fno-exceptions -fno-rtti -funroll-loops -finline-functions -fomit-frame-pointer -DNDEBUG -fstrict-aliasing -static -s")
-
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    # TODO("CMAKE_CXX_FLAGS")
-    target_compile_options(${CORE_NAME} PRIVATE
-            /O2                     # Maximum optimization
-            /arch:NATIVE            # Optimize for the current architecture
-    )
-endif ()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto -static-openmp -static -Ofast -march=native -mtune=generic -fno-plt -fomit-frame-pointer -DNDEBUG -fstrict-aliasing -fPIC")
 
 add_executable(${CORE_NAME} 5gfi6gdi9/main.cc)
 
@@ -103,10 +71,10 @@ set_target_properties(${CORE_NAME} PROPERTIES
 message(STATUS "< ============================== >")
 
 ## static curl lib not supported in Vcpkg
-find_package(CURL REQUIRED)
-if (CURL_FOUND)
-    target_link_libraries(${CORE_NAME} PUBLIC ${CURL_STATIC_LIBRARIES})
-endif ()
+#find_package(CURL REQUIRED)
+#if (CURL_FOUND)
+#    target_link_libraries(${CORE_NAME} PUBLIC ${CURL_STATIC_LIBRARIES})
+#endif ()
 
 
 find_package(fmt CONFIG QUIET)
@@ -117,17 +85,6 @@ if (fmt_FOUND)
 else ()
     message(WARNING "fmt library not found.")
 endif ()
-
-
-find_package(OpenMP QUIET)
-if (OpenMP_CXX_FOUND)
-    target_link_libraries(${CORE_NAME} PUBLIC OpenMP::OpenMP_CXX)
-    target_compile_definitions(${CORE_NAME} PUBLIC USE_OPENMP)
-    message(STATUS "OpenMP library added.")
-else ()
-    message(WARNING "OpenMP library not found.")
-endif ()
-
 
 find_package(PkgConfig QUIET)
 pkg_check_modules(JSONCPP QUIET jsoncpp)
